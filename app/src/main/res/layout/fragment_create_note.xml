@@ -10,7 +10,7 @@
         android:id="@+id/first_data_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="first data"
+        android:hint="First data"
         android:paddingStart="12dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
