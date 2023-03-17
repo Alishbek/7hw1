@@ -1,5 +1,6 @@
 package com.example.a7hw1.data.repository
 
+import com.example.a7hw1.data.base.BaseRepository
 import com.example.a7hw1.data.local.NoteDao
 import com.example.a7hw1.data.mappers.toNote
 import com.example.a7hw1.data.mappers.toNoteEntity
@@ -13,53 +14,22 @@ import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 import javax.inject.Inject
 
-class NoteRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : NoteRepository {
-    override fun createNote(note: Note): Flow<ResultStatus<Unit>> = flow {
-        emit(ResultStatus.Loading())
-        try {
-            val data = noteDao.createNote(note.toNoteEntity())
+class NoteRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : NoteRepository,
+    BaseRepository() {
+    override fun createNote(note: Note) = doRequest {
+        noteDao.createNote(note.toNoteEntity())
+    }
 
-            emit(ResultStatus.Success(data))
-        } catch (e: IOException){
-            emit(ResultStatus.Error(e.message))
-        }
+    override fun getAllNotes() = doRequest {
+        noteDao.getAllNotes().map { it.toNote() }
+    }
 
-    }.flowOn(Dispatchers.IO)
+    override fun editNote(note: Note) = doRequest {
+        noteDao.editNote(note.toNoteEntity())
+    }
 
-    override fun getAllNotes(): Flow<ResultStatus<List<Note>>> = flow {
-        emit(ResultStatus.Loading())
-        try {
-            val data = noteDao.getAllNotes().map { it.toNote() }
+    override fun deleteNote(note: Note) = doRequest {
+        noteDao.deleteNote(note.toNoteEntity())
+    }
 
-            emit(ResultStatus.Success(data))
-        } catch (e: IOException){
-            emit(ResultStatus.Error(e.message))
-        }
-
-
-    }.flowOn(Dispatchers.IO)
-
-    override fun editNote(note: Note) : Flow<ResultStatus<Unit>> = flow {
-        emit(ResultStatus.Loading())
-        try {
-            val data = noteDao.editNote(note.toNoteEntity())
-
-            emit(ResultStatus.Success(data))
-        } catch (e: IOException){
-            emit(ResultStatus.Error(e.message))
-        }
-
-    }.flowOn(Dispatchers.IO)
-
-    override fun deleteNote(note: Note): Flow<ResultStatus<Unit>> = flow {
-        emit(ResultStatus.Loading())
-        try {
-            val data = noteDao.deleteNote(note.toNoteEntity())
-
-            emit(ResultStatus.Success(data))
-        } catch (e: IOException){
-            emit(ResultStatus.Error(e.message))
-        }
-
-    }.flowOn(Dispatchers.IO)
 }

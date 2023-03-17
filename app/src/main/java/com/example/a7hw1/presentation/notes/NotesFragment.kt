@@ -12,34 +12,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.a7hw1.R
 import com.example.a7hw1.databinding.FragmentNotesBinding
+import com.example.a7hw1.presentation.base.BaseFragment
 import kotlinx.coroutines.launch
 
-class NotesFragment : Fragment(R.layout.fragment_notes) {
+class NotesFragment : BaseFragment<NotesViewModel, FragmentNotesBinding>() {
+    override val vm: NotesViewModel by viewModels()
+    override val binding: FragmentNotesBinding = FragmentNotesBinding.inflate(layoutInflater)
 
-    private val viewModel: NotesViewModel by viewModels()
-    private lateinit var binding: FragmentNotesBinding
+    override fun setupRequests() {
+        vm.noteState.collectState(onLoading = {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentNotesBinding.bind(view)
+        }, onError = {
 
-        listeners()
+        }, onSuccess = {
+
+        })
     }
-
-    private fun listeners() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.noteState.collect {
-                    when (it) {
-                        is UiState.Empty -> {}
-                        is UiState.Error -> {}
-                        is UiState.Loading -> {}
-                        is UiState.Success -> {}
-                    }
-                }
-            }
-        }
-    }
-
-
 }
