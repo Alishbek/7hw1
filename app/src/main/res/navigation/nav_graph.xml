@@ -16,7 +16,11 @@
     </fragment>
     <fragment
         android:id="@+id/createNoteFragment"
-        android:name="com.example.a7hw1.presentation.notes.CreateNoteFragment"
+        android:name="com.example.a7hw1.presentation.create_note.CreateNoteFragment"
         android:label="fragment_create_note"
-        tools:layout="@layout/fragment_create_note" />
+        tools:layout="@layout/fragment_create_note" >
+        <action
+            android:id="@+id/action_createNoteFragment_to_notesFragment"
+            app:destination="@id/notesFragment" />
+    </fragment>
 </navigation>

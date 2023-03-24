@@ -1,11 +1,8 @@
 package com.example.a7hw1.presentation.notes
 
-import androidx.lifecycle.viewModelScope
 import com.example.a7hw1.domain.model.Note
-import com.example.a7hw1.domain.usecase.CreateNoteUseCase
 import com.example.a7hw1.domain.usecase.DeleteNoteUseCase
 import com.example.a7hw1.domain.usecase.GetAllNotesUseCase
-import com.example.a7hw1.domain.utils.ResultStatus
 import com.example.a7hw1.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +20,14 @@ class NotesViewModel @Inject constructor(
     val noteState = _notesState.asStateFlow()
     private val _deleteNoteState = MutableStateFlow<UiState<Unit>>(UiState.Empty())
     val deleteNoteState = _deleteNoteState.asStateFlow()
+
+
+    private val _createNoteState = MutableStateFlow<UiState<Unit>>(UiState.Empty())
+    val createNoteState = _createNoteState.asStateFlow()
+
+    init {
+        getAllNotes()
+    }
 
     fun getAllNotes() {
         getAllNotesUseCase().collectFlow(_notesState)
